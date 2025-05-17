@@ -4,7 +4,7 @@ spring:
   application:
     name: service-order
   profiles:
-    active: test
+    active: dev # 按需加载环境，动态环境切换
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848

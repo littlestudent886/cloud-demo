@@ -1,6 +1,7 @@
 package com.zzc.order.service.Impl;
 
 import com.zzc.order.bean.Order;
+import com.zzc.order.feign.ProductFeignClient;
 import com.zzc.order.service.OrderService;
 import com.zzc.product.bean.Product;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,13 @@ public class OrderServiceImpl implements OrderService {
     RestTemplate restTemplate;
     @Autowired
     LoadBalancerClient loadBalancerClient;
+    @Autowired
+    ProductFeignClient productFeignClient;
 
     @Override
     public Order createOrder(Long productId, Long userId) {
-        Product product = getProductFromRemoteWithLoadBalancerAnnotation(productId);
+//        Product product = getProductFromRemoteWithLoadBalancerAnnotation(productId);
+        Product product = productFeignClient.getProductById(productId);
         Order  order = new Order();
         order.setId(1L);
         order.setUserId(userId);
