@@ -7,6 +7,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -21,6 +22,13 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(new BigDecimal(1000));
         product.setProductName("huawei-"+productId);
         product.setNum(2);
+
+//        try {
+//            TimeUnit.SECONDS.sleep(100);
+//            System.out.println("hello");
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         return product;
     }

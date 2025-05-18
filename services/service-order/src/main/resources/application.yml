@@ -5,15 +5,16 @@ spring:
     name: service-order
   profiles:
     active: dev # 按需加载环境，动态环境切换
+    include: feign
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
       config:
         namespace: ${spring.profiles.active:public}
-#  config:
-#    import:
-#      - nacos:common.properties?group=order
-#      - nacos:database.properties?group=order
+logging:
+  level:
+    com.zzc.order.feign: debug
+
 
 ---
 spring:
