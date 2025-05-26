@@ -13,6 +13,11 @@ spring:
             logger-level: full
             connect-timeout: 3000
             read-timeout: 5000
+    sentinel:
+      transport:
+        dashboard: localhost:8858
+      eager: true
+      web-context-unify: false
 #            retryer: com.zzc.order.retryer
 
 

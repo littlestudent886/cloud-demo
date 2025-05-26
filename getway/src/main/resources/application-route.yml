@@ -1,0 +1,53 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+              allowed-origin-patterns: "*"
+              allowed-headers: "*"
+              allowed-methods: "*"
+
+      routes:
+        - id: order-route
+          uri: lb://service-order
+          predicates:
+#            - Path=/api/order/**  短写法
+#           长写法
+            - name: Path
+              args:
+                patterns: /api/order/**
+                match_trailing_slash: true
+          filters:
+            - RewritePath= /api/order/?(?<segment>.*),/$\{segment}
+            - OnceToken= X-Response-Token, uuid
+
+        - id: product-route
+          uri: lb://service-product
+          predicates:
+            - Path= /api/product/**
+          filters:
+            - RewritePath= /api/product/?(?<segment>.*),/$\{segment}
+
+
+
+        - id: bing-route
+          uri: https://cn.bing.com/
+          predicates:
+            - name: Path
+              args:
+                patterns: /search
+            - name: Query
+              args:
+                param: q
+                regexp: haha
+            - Vip= user,zzc
+            - name: Vip
+              args:
+                param: user
+                value: zzc
+          order: 10
+          metadata:
+            hello: world
+      default-filters:
+        - AddResponseHeader= X-Response-Token, 123

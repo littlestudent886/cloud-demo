@@ -1,5 +1,7 @@
 package com.zzc.order.service.Impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.zzc.order.bean.Order;
 import com.zzc.order.feign.ProductFeignClient;
 import com.zzc.order.service.OrderService;
@@ -29,6 +31,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ProductFeignClient productFeignClient;
 
+
+    @SentinelResource(value = "createOrder",blockHandler = "createOrderFallback")
     @Override
     public Order createOrder(Long productId, Long userId) {
 //        Product product = getProductFromRemoteWithLoadBalancerAnnotation(productId);
@@ -42,6 +46,17 @@ public class OrderServiceImpl implements OrderService {
         order.setAddress("北京");
         // TODD 远程查询商品列表
         order.setProductList(Arrays.asList(product));
+        return order;
+    }
+
+    // 兜底回调
+    public Order createOrderFallback(Long productId, Long userId, BlockException e){
+        Order order = new Order();
+        order.setId(0L);
+        order.setUserId(userId);
+        order.setTotalAmount(BigDecimal.ZERO);
+        order.setNickName("未知用户");
+        order.setAddress("异常信息"+e.getClass());
         return order;
     }
 
